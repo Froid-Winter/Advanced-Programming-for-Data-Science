@@ -1,0 +1,1757 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TP04: LLM & NLP Evaluation Metrics Live Interactive Suite</title>
+  
+  <!-- SEO & Social Meta -->
+  <meta name="description" content="Interactive learning platform and live evaluation pipeline for 10 NLP and LLM Evaluation Metrics (Exact Match, Accuracy, F1, BLEU, ROUGE, METEOR, BERTScore, WER, CER, Comparative Evaluation).">
+  <meta name="keywords" content="NLP metrics, LLM evaluation, Exact Match, BLEU, ROUGE, BERTScore, METEOR, WER, CER, F1 score">
+  <meta name="author" content="Advanced Programming for Data Science">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- KaTeX for LaTeX Formula Rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+          onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}]});"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ==================== SIDEBAR NAVIGATION ==================== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-wrapper">
+        <div class="logo-icon"><i class="fa-solid fa-chart-line"></i></div>
+        <div class="logo-text">
+          <h2>TP04 Suite</h2>
+          <span>LLM Evaluation</span>
+        </div>
+        <button class="sidebar-close-btn" id="sidebarCloseBtn" title="Collapse Sidebar (Ctrl + B)">
+          <i class="fa-solid fa-angles-left"></i>
+        </button>
+      </div>
+      <div class="nav-search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="navSearch" placeholder="Search 10 metrics...">
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-category">Live Pipeline</div>
+      <a href="#pipeline-section" class="nav-item">
+        <i class="fa-solid fa-bolt" style="color: #fbbf24;"></i>
+        <span class="nav-label">Live Stream Pipeline</span>
+        <span class="nav-badge">RUN</span>
+      </a>
+
+      <div class="nav-category">Exact & Classification</div>
+      <a href="#lesson-1" class="nav-item">
+        <i class="fa-solid fa-equals"></i>
+        <span class="nav-label">1. Exact Match (EM)</span>
+        <span class="nav-badge">01</span>
+      </a>
+      <a href="#lesson-2" class="nav-item">
+        <i class="fa-solid fa-bullseye"></i>
+        <span class="nav-label">2. Accuracy</span>
+        <span class="nav-badge">02</span>
+      </a>
+      <a href="#lesson-3" class="nav-item">
+        <i class="fa-solid fa-scale-balanced"></i>
+        <span class="nav-label">3. Precision, Recall & F1</span>
+        <span class="nav-badge">03</span>
+      </a>
+
+      <div class="nav-category">N-Gram & Overlap</div>
+      <a href="#lesson-4" class="nav-item">
+        <i class="fa-solid fa-language"></i>
+        <span class="nav-label">4. BLEU Score</span>
+        <span class="nav-badge">04</span>
+      </a>
+      <a href="#lesson-5" class="nav-item">
+        <i class="fa-solid fa-file-lines"></i>
+        <span class="nav-label">5. ROUGE Score</span>
+        <span class="nav-badge">05</span>
+      </a>
+      <a href="#lesson-6" class="nav-item">
+        <i class="fa-solid fa-meteor"></i>
+        <span class="nav-label">6. METEOR Score</span>
+        <span class="nav-badge">06</span>
+      </a>
+
+      <div class="nav-category">Semantics & Error Rates</div>
+      <a href="#lesson-7" class="nav-item">
+        <i class="fa-solid fa-brain"></i>
+        <span class="nav-label">7. BERTScore</span>
+        <span class="nav-badge">07</span>
+      </a>
+      <a href="#lesson-8" class="nav-item">
+        <i class="fa-solid fa-microphone-lines"></i>
+        <span class="nav-label">8. Word Error Rate (WER)</span>
+        <span class="nav-badge">08</span>
+      </a>
+      <a href="#lesson-9" class="nav-item">
+        <i class="fa-solid fa-font"></i>
+        <span class="nav-label">9. Char Error Rate (CER)</span>
+        <span class="nav-badge">09</span>
+      </a>
+
+      <div class="nav-category">Synthesis & Comparison</div>
+      <a href="#lesson-10" class="nav-item">
+        <i class="fa-solid fa-layer-group"></i>
+        <span class="nav-label">10. Comparative Evaluation</span>
+        <span class="nav-badge">10</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="theme-toggle-btn" id="themeToggleBtn">
+        <i class="fa-solid fa-moon" id="themeIcon"></i>
+        <span id="themeText">Dark Mode</span>
+      </button>
+      <a href="https://github.com" target="_blank" class="github-link" title="GitHub Pages Source">
+        <i class="fa-brands fa-github"></i>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Mobile Backdrop Overlay for Retractable Sidebar -->
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- ==================== MAIN CONTENT ==================== -->
+  <div class="main-wrapper">
+    
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <button class="menu-toggle" id="menuToggle" title="Toggle Sidebar (Ctrl + B)">
+          <i class="fa-solid fa-bars" id="menuToggleIcon"></i>
+        </button>
+        <div class="breadcrumbs">
+          <span>TP04</span>
+          <i class="fa-solid fa-chevron-right" style="font-size:0.7rem;"></i>
+          <span class="current" id="breadcrumbCurrent">Overview</span>
+          <span class="sidebar-status-tag" id="sidebarStatusTag" style="display:none;">Sidebar Retracted</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <a href="#pipeline-section" class="header-btn header-btn-primary">
+          <i class="fa-solid fa-play"></i> Run Live Pipeline
+        </a>
+        <a href="#lesson-10" class="header-btn header-btn-secondary">
+          <i class="fa-solid fa-compass"></i> Metric Wizard
+        </a>
+      </div>
+    </header>
+
+    <main class="content-area">
+
+      <!-- Hero Banner -->
+      <section class="hero-section" id="hero">
+        <div class="hero-tag">
+          <span class="live-dot"></span>
+          Interactive Live Suite • Ready for GitHub Pages
+        </div>
+        <h1 class="hero-title">LLM & NLP Evaluation Metrics Live Interactive Suite</h1>
+        <p class="hero-description">
+          A comprehensive interactive masterclass and real-time evaluation pipeline covering all 10 lessons in TP04.
+          From exact match and classification accuracy to n-gram overlaps (BLEU, ROUGE, METEOR), deep contextual embeddings (BERTScore),
+          and transcript error rates (WER, CER).
+        </p>
+
+        <div class="hero-stats">
+          <div class="stat-card">
+            <div class="stat-value">10</div>
+            <div class="stat-label">Evaluation Lessons</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">100%</div>
+            <div class="stat-label">Client-Side (No Backend)</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">Instant</div>
+            <div class="stat-label">Real-Time Calculations</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">Ready</div>
+            <div class="stat-label">GitHub Pages (.github.io)</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== UNIFIED LIVE EVALUATION PIPELINE ==================== -->
+      <section class="pipeline-card" id="pipeline-section">
+        <div class="pipeline-header">
+          <div>
+            <h3><i class="fa-solid fa-bolt"></i> Live Stream Evaluation Pipeline</h3>
+            <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:4px;">
+              Stream any reference and candidate text simultaneously through all evaluation metrics!
+            </p>
+          </div>
+          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+            <select id="pipelinePreset" style="padding:8px 12px; background:var(--bg-tertiary); border:1px solid var(--card-border); color:var(--text-primary); border-radius:6px; font-size:0.85rem;">
+              <option value="translation">Preset: Machine Translation</option>
+              <option value="summarization">Preset: Text Summarization</option>
+              <option value="exact">Preset: Exact Match</option>
+              <option value="speech">Preset: Speech Recognition (ASR)</option>
+              <option value="ocr">Preset: OCR Recognition</option>
+            </select>
+            <select id="pipelineBleuOrder" style="padding:8px 12px; background:var(--bg-tertiary); border:1px solid var(--card-border); color:var(--text-primary); border-radius:6px; font-size:0.85rem;" title="Select N-gram for BLEU in Pipeline">
+              <option value="4" selected>BLEU: 4-gram</option>
+              <option value="3">BLEU: 3-gram</option>
+              <option value="2">BLEU: 2-gram</option>
+              <option value="1">BLEU: 1-gram</option>
+            </select>
+            <button class="btn-calc" id="runPipelineBtn"><i class="fa-solid fa-rotate"></i> Run Live Pipeline</button>
+          </div>
+        </div>
+
+        <div class="input-grid">
+          <div class="input-group">
+            <label><i class="fa-solid fa-bookmark"></i> Ground Truth / Reference Text</label>
+            <textarea id="pipeRef" rows="3">The quick brown fox jumps over the lazy dog.</textarea>
+          </div>
+          <div class="input-group">
+            <label><i class="fa-solid fa-robot"></i> Model Output / Candidate Text</label>
+            <textarea id="pipeCand" rows="3">A fast brown fox leaps over a lazy dog.</textarea>
+          </div>
+        </div>
+
+        <!-- Normalization Checkpoint Controls -->
+        <div class="pipeline-norm-controls">
+          <span class="norm-control-title"><i class="fa-solid fa-sliders"></i> Exact Match Normalization:</span>
+          <label class="checkbox-label" title="Toggle between normalized comparison and raw strict comparison">
+            <input type="checkbox" id="pipeOptNormalize" checked>
+            <span>Apply Normalization</span>
+          </label>
+          <label class="checkbox-label" id="pipeOptArticlesLabel" title="Remove English articles: a, an, the">
+            <input type="checkbox" id="pipeOptArticles" checked>
+            <span>Remove Articles (a, an, the)</span>
+          </label>
+          <label class="checkbox-label" id="pipeOptPunctLabel" title="Remove punctuation characters">
+            <input type="checkbox" id="pipeOptPunct" checked>
+            <span>Remove Punctuation</span>
+          </label>
+          <label class="checkbox-label" id="pipeOptLowerLabel" title="Convert characters to lowercase">
+            <input type="checkbox" id="pipeOptLower" checked>
+            <span>Lowercase</span>
+          </label>
+        </div>
+
+        <!-- Metric Stream Results Grid -->
+        <div class="pipeline-results-grid">
+          <div class="metric-result-card" id="cardEM">
+            <div class="m-title">Norm Exact Match</div>
+            <div class="m-score">0.0%</div>
+            <div class="m-sub" id="cardEMSub">Normalized (Filter ON)</div>
+            <div class="m-bar"><div class="m-bar-fill" style="width:0%;"></div></div>
+          </div>
+          <div class="metric-result-card" id="cardBleu">
+            <div class="m-title">BLEU-4 Score</div>
+            <div class="m-score">0.00</div>
+            <div class="m-bar"><div class="m-bar-fill" style="width:0%;"></div></div>
+          </div>
+          <div class="metric-result-card" id="cardRouge1">
+            <div class="m-title">ROUGE-1 F1</div>
+            <div class="m-score">0.0%</div>
+            <div class="m-bar"><div class="m-bar-fill" style="width:0%;"></div></div>
+          </div>
+          <div class="metric-result-card" id="cardRougeL">
+            <div class="m-title">ROUGE-L F1</div>
+            <div class="m-score">0.0%</div>
+            <div class="m-bar"><div class="m-bar-fill" style="width:0%;"></div></div>
+          </div>
+          <div class="metric-result-card" id="cardMeteor">
+            <div class="m-title">METEOR Score</div>
+            <div class="m-score">0.00</div>
+            <div class="m-bar"><div class="m-bar-fill" style="width:0%;"></div></div>
+          </div>
+          <div class="metric-result-card" id="cardBert">
+            <div class="m-title">BERTScore (Semantic)</div>
+            <div class="m-score">0.0%</div>
+            <div class="m-bar"><div class="m-bar-fill" style="width:0%;"></div></div>
+          </div>
+          <div class="metric-result-card" id="cardWER">
+            <div class="m-title">WER (Word Error)</div>
+            <div class="m-score">0.0%</div>
+            <div class="m-bar"><div class="m-bar-fill" style="width:0%;"></div></div>
+          </div>
+          <div class="metric-result-card" id="cardCER">
+            <div class="m-title">CER (Char Error)</div>
+            <div class="m-score">0.0%</div>
+            <div class="m-bar"><div class="m-bar-fill" style="width:0%;"></div></div>
+          </div>
+        </div>
+
+        <!-- Live Comparison Chart -->
+        <div style="margin-top:28px; background:var(--bg-tertiary); border:1px solid var(--card-border); border-radius:12px; padding:20px;">
+          <h4 style="font-size:0.9rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:12px;">
+            <i class="fa-solid fa-chart-column"></i> Multi-Metric Comparative Radar / Bar Spectrum
+          </h4>
+          <div style="height:260px; position:relative;">
+            <canvas id="pipelineChartCanvas"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== LESSON 1: EXACT MATCH ==================== -->
+      <section class="lesson-card" id="lesson-1">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="lesson-badge">01</div>
+            <div>
+              <h2 class="section-title">Exact Match (EM) Evaluation</h2>
+              <p style="color:var(--text-secondary); font-size:0.9rem;">Strict binary string equality and normalized question-answering evaluation.</p>
+            </div>
+          </div>
+          <div class="section-tags">
+            <span class="badge badge-blue">Deterministic</span>
+            <span class="badge badge-green">Higher is Better</span>
+            <span class="badge badge-purple">QA & Math</span>
+          </div>
+        </div>
+
+        <div class="tabs-header">
+          <button class="tab-btn active" data-tab="l1-play"><i class="fa-solid fa-flask"></i> Interactive Playground</button>
+          <button class="tab-btn" data-tab="l1-theory"><i class="fa-solid fa-book-open"></i> Theory & Formulas</button>
+          <button class="tab-btn" data-tab="l1-code"><i class="fa-brands fa-python"></i> Python Code</button>
+          <button class="tab-btn" data-tab="l1-pros"><i class="fa-solid fa-scale-balanced"></i> Pros & Cons</button>
+        </div>
+
+        <!-- Playground Tab -->
+        <div class="tab-content active" data-content="l1-play">
+          <div class="playground-widget">
+            <div class="playground-header">
+              <span class="playground-title"><i class="fa-solid fa-vial"></i> Live Exact Match Evaluator</span>
+              <button class="btn-calc" id="emCalcBtn"><i class="fa-solid fa-play"></i> Evaluate EM</button>
+            </div>
+
+            <div class="input-grid">
+              <div class="input-group">
+                <label>Reference Answer (Ground Truth)</label>
+                <input type="text" id="emRef" value="The Pacific Ocean">
+              </div>
+              <div class="input-group">
+                <label>Candidate Prediction (LLM Output)</label>
+                <input type="text" id="emCand" value="pacific ocean.">
+              </div>
+            </div>
+
+            <div class="options-row">
+              <span style="font-weight:600; color:var(--text-secondary);">Normalization Filters:</span>
+              <label class="checkbox-label"><input type="checkbox" id="emOptLower" checked> Lowercase</label>
+              <label class="checkbox-label"><input type="checkbox" id="emOptPunct" checked> Remove Punctuation</label>
+              <label class="checkbox-label"><input type="checkbox" id="emOptSpace" checked> Strip Extra Spaces</label>
+              <label class="checkbox-label"><input type="checkbox" id="emOptArticles" checked> Remove Articles (a, an, the)</label>
+            </div>
+
+            <div class="result-panel">
+              <div class="result-header">Evaluation Result</div>
+              <div class="score-display-row">
+                <div class="score-badge-large">
+                  <span class="score-number" id="emScore">1.0</span>
+                  <span class="score-label">Normalized EM Score</span>
+                </div>
+                <div class="score-meta-list">
+                  <div class="score-meta-item">
+                    <span class="key">Raw Match</span>
+                    <span class="val" id="emRawScore">0</span>
+                  </div>
+                  <div class="score-meta-item">
+                    <span class="key">Normalized Reference</span>
+                    <span class="val" id="emNormRef" style="font-size:0.9rem;">"pacific ocean"</span>
+                  </div>
+                  <div class="score-meta-item">
+                    <span class="key">Normalized Candidate</span>
+                    <span class="val" id="emNormCand" style="font-size:0.9rem;">"pacific ocean"</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Theory Tab -->
+        <div class="tab-content" data-content="l1-theory">
+          <p>
+            <strong>Exact Match (EM)</strong> measures whether a model's predicted answer strictly matches the reference ground truth string.
+            If the prediction matches the reference answer, the score is 1; otherwise, it is 0.
+          </p>
+          <div class="formula-box">
+            <div class="formula-title">Batch Exact Match Formula</div>
+            <div class="formula-math">
+              $$EM = \frac{1}{N}\sum_{i=1}^{N} score_i \quad \text{where } score_i \in \{0, 1\}$$
+            </div>
+          </div>
+          <h4>Normalized Exact Match</h4>
+          <p>
+            Because raw string comparison fails on minor casing or punctuation differences, standardized NLP pipelines normalize text before matching:
+          </p>
+          <ul style="margin: 10px 0 10px 20px;">
+            <li>Convert all letters to lowercase.</li>
+            <li>Remove punctuation marks (<code>.,?!-;:</code>).</li>
+            <li>Collapse consecutive spaces.</li>
+            <li>Optionally remove English articles (<em>"a"</em>, <em>"an"</em>, <em>"the"</em>).</li>
+          </ul>
+        </div>
+
+        <!-- Python Code Tab -->
+        <div class="tab-content" data-content="l1-code">
+          <div class="code-wrapper">
+            <div class="code-header">
+              <span>Python 3 Implementation</span>
+              <button class="btn-copy"><i class="fa-regular fa-copy"></i> Copy</button>
+            </div>
+            <pre><code>import re
+import string
+
+def normalize_text(s: str, remove_articles: bool = True) -> str:
+    """Normalize text for fair Exact Match comparison."""
+    s = s.lower()
+    s = s.translate(str.maketrans("", "", string.punctuation))
+    if remove_articles:
+        s = re.sub(r"\b(a|an|the)\b", " ", s)
+    return " ".join(s.split())
+
+def exact_match_score(prediction: str, reference: str, normalize: bool = True) -> float:
+    if normalize:
+        return 1.0 if normalize_text(prediction) == normalize_text(reference) else 0.0
+    return 1.0 if prediction.strip() == reference.strip() else 0.0
+
+# Example:
+pred = "pacific ocean."
+ref = "The Pacific Ocean"
+print("Raw EM:", exact_match_score(pred, ref, normalize=False))        # 0.0
+print("Normalized EM:", exact_match_score(pred, ref, normalize=True))  # 1.0</code></pre>
+          </div>
+        </div>
+
+        <!-- Pros & Cons Tab -->
+        <div class="tab-content" data-content="l1-pros">
+          <div class="pros-cons-grid">
+            <div class="pro-box">
+              <h5><i class="fa-solid fa-circle-check"></i> Advantages</h5>
+              <ul>
+                <li>Simple, intuitive, and computationally trivial.</li>
+                <li>Provides an uncompromising measure of exact correctness.</li>
+                <li>Essential for factual QA, multiple choice letter matching, and mathematical answers.</li>
+              </ul>
+            </div>
+            <div class="con-box">
+              <h5><i class="fa-solid fa-circle-xmark"></i> Limitations</h5>
+              <ul>
+                <li>Excessively rigid for long-form answers and natural paraphrasing.</li>
+                <li>Semantically identical sentences receive a score of 0.</li>
+                <li>Normalization may strip significant context if not configured properly.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== LESSON 2: ACCURACY ==================== -->
+      <section class="lesson-card" id="lesson-2">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="lesson-badge">02</div>
+            <div>
+              <h2 class="section-title">Accuracy Evaluation</h2>
+              <p style="color:var(--text-secondary); font-size:0.9rem;">Overall classification correctness and the Accuracy Paradox.</p>
+            </div>
+          </div>
+          <div class="section-tags">
+            <span class="badge badge-blue">Classification</span>
+            <span class="badge badge-green">Higher is Better</span>
+            <span class="badge badge-amber">Sensitive to Imbalance</span>
+          </div>
+        </div>
+
+        <div class="tabs-header">
+          <button class="tab-btn active" data-tab="l2-play"><i class="fa-solid fa-flask"></i> Interactive Playground</button>
+          <button class="tab-btn" data-tab="l2-theory"><i class="fa-solid fa-book-open"></i> Theory & Formulas</button>
+          <button class="tab-btn" data-tab="l2-code"><i class="fa-brands fa-python"></i> Python Code</button>
+          <button class="tab-btn" data-tab="l2-pros"><i class="fa-solid fa-scale-balanced"></i> Pros & Cons</button>
+        </div>
+
+        <div class="tab-content active" data-content="l2-play">
+          <div class="playground-widget">
+            <div class="playground-header">
+              <span class="playground-title"><i class="fa-solid fa-table-cells-large"></i> Confusion Matrix & Accuracy Calculator</span>
+              <div style="display:flex; gap:8px;">
+                <button class="header-btn header-btn-secondary" id="btnAccBalanced">Preset: Balanced</button>
+                <button class="header-btn header-btn-secondary" id="btnAccImbalanced">Preset: Imbalanced Paradox</button>
+              </div>
+            </div>
+
+            <div class="input-grid" style="grid-template-columns: repeat(4, 1fr);">
+              <div class="input-group">
+                <label>True Positive (TP)</label>
+                <input type="number" id="accTP" value="45" min="0">
+              </div>
+              <div class="input-group">
+                <label>True Negative (TN)</label>
+                <input type="number" id="accTN" value="45" min="0">
+              </div>
+              <div class="input-group">
+                <label>False Positive (FP)</label>
+                <input type="number" id="accFP" value="5" min="0">
+              </div>
+              <div class="input-group">
+                <label>False Negative (FN)</label>
+                <input type="number" id="accFN" value="5" min="0">
+              </div>
+            </div>
+
+            <div class="callout callout-warning" id="accAlert" style="display:none;">
+              <div class="callout-title"><i class="fa-solid fa-triangle-exclamation"></i> Accuracy Paradox Warning!</div>
+              This dataset is heavily skewed! Notice how accuracy remains high (>95%) even when the model detects almost none of the positive minority class!
+            </div>
+
+            <div class="result-panel">
+              <div class="result-header">Calculated Performance</div>
+              <div class="score-display-row">
+                <div class="score-badge-large">
+                  <span class="score-number" id="accScore">90.00%</span>
+                  <span class="score-label">Overall Accuracy</span>
+                </div>
+                <div class="score-meta-list">
+                  <div class="score-meta-item">
+                    <span class="key">Total Samples</span>
+                    <span class="val" id="accTotal">100</span>
+                  </div>
+                  <div class="score-meta-item">
+                    <span class="key">Error Rate</span>
+                    <span class="val" id="accErr">10.00%</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Confusion Matrix Grid -->
+              <div style="margin-top:20px;">
+                <div style="font-size:0.8rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px;">Interactive 2x2 Matrix</div>
+                <div class="confusion-matrix-grid">
+                  <div class="cm-cell header"></div>
+                  <div class="cm-cell header">Predicted Pos</div>
+                  <div class="cm-cell header">Predicted Neg</div>
+                  <div class="cm-cell header">Actual Pos</div>
+                  <div class="cm-cell positive"><span class="cm-val" id="cmTP">45</span><span style="font-size:0.75rem;">TP</span></div>
+                  <div class="cm-cell negative"><span class="cm-val" id="cmFN">5</span><span style="font-size:0.75rem;">FN</span></div>
+                  <div class="cm-cell header">Actual Neg</div>
+                  <div class="cm-cell negative"><span class="cm-val" id="cmFP">5</span><span style="font-size:0.75rem;">FP</span></div>
+                  <div class="cm-cell positive"><span class="cm-val" id="cmTN">45</span><span style="font-size:0.75rem;">TN</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-content" data-content="l2-theory">
+          <p>
+            <strong>Accuracy</strong> measures the proportion of predictions that the model classifies correctly out of all predictions.
+          </p>
+          <div class="formula-box">
+            <div class="formula-title">Accuracy Formula</div>
+            <div class="formula-math">
+              $$Accuracy = \frac{TP + TN}{TP + TN + FP + FN}$$
+            </div>
+          </div>
+          <p>
+            Where:
+            <br>• <strong>TP (True Positive):</strong> Correctly predicted positive instances.
+            <br>• <strong>TN (True Negative):</strong> Correctly predicted negative instances.
+            <br>• <strong>FP (False Positive):</strong> Incorrectly predicted positive instances (Type I Error).
+            <br>• <strong>FN (False Negative):</strong> Incorrectly predicted negative instances (Type II Error).
+          </p>
+        </div>
+
+        <div class="tab-content" data-content="l2-code">
+          <div class="code-wrapper">
+            <div class="code-header">
+              <span>Python 3 Implementation</span>
+              <button class="btn-copy"><i class="fa-regular fa-copy"></i> Copy</button>
+            </div>
+            <pre><code>from sklearn.metrics import accuracy_score, confusion_matrix
+
+y_true = [1, 0, 1, 1, 0, 1, 0, 0, 1, 0]
+y_pred = [1, 0, 1, 0, 0, 1, 0, 1, 1, 0]
+
+acc = accuracy_score(y_true, y_pred)
+tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
+
+print(f"Accuracy: {acc:.2%}")
+print(f"TP: {tp}, TN: {tn}, FP: {fp}, FN: {fn}")</code></pre>
+          </div>
+        </div>
+
+        <div class="tab-content" data-content="l2-pros">
+          <div class="pros-cons-grid">
+            <div class="pro-box">
+              <h5><i class="fa-solid fa-circle-check"></i> Advantages</h5>
+              <ul>
+                <li>Highly intuitive and easy to communicate to non-technical stakeholders.</li>
+                <li>Effective metric when target classes are relatively balanced.</li>
+                <li>Gives a quick high-level summary of model performance.</li>
+              </ul>
+            </div>
+            <div class="con-box">
+              <h5><i class="fa-solid fa-circle-xmark"></i> Limitations</h5>
+              <ul>
+                <li>Severely misleading on imbalanced datasets (e.g. 99% negative class).</li>
+                <li>Treats all errors identically, ignoring real-world costs of false negatives.</li>
+                <li>Does not provide insight into which class is failing.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== LESSON 3: PRECISION, RECALL, F1 ==================== -->
+      <section class="lesson-card" id="lesson-3">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="lesson-badge">03</div>
+            <div>
+              <h2 class="section-title">Precision, Recall, and F1-Score</h2>
+              <p style="color:var(--text-secondary); font-size:0.9rem;">Granular classification metrics for imbalanced datasets and trade-off balance.</p>
+            </div>
+          </div>
+          <div class="section-tags">
+            <span class="badge badge-purple">Harmonic Mean</span>
+            <span class="badge badge-green">Higher is Better</span>
+            <span class="badge badge-blue">Imbalanced Safe</span>
+          </div>
+        </div>
+
+        <div class="tabs-header">
+          <button class="tab-btn active" data-tab="l3-play"><i class="fa-solid fa-flask"></i> Interactive Playground</button>
+          <button class="tab-btn" data-tab="l3-theory"><i class="fa-solid fa-book-open"></i> Theory & Formulas</button>
+          <button class="tab-btn" data-tab="l3-code"><i class="fa-brands fa-python"></i> Python Code</button>
+          <button class="tab-btn" data-tab="l3-pros"><i class="fa-solid fa-scale-balanced"></i> Pros & Cons</button>
+        </div>
+
+        <div class="tab-content active" data-content="l3-play">
+          <div class="playground-widget">
+            <div class="playground-header">
+              <span class="playground-title"><i class="fa-solid fa-sliders"></i> Precision-Recall-F1 Balance Simulator</span>
+            </div>
+
+            <div class="input-grid" style="grid-template-columns: repeat(3, 1fr);">
+              <div class="input-group">
+                <label>True Positive (TP)</label>
+                <input type="number" id="prfTP" value="80" min="0">
+              </div>
+              <div class="input-group">
+                <label>False Positive (FP)</label>
+                <input type="number" id="prfFP" value="20" min="0">
+              </div>
+              <div class="input-group">
+                <label>False Negative (FN)</label>
+                <input type="number" id="prfFN" value="10" min="0">
+              </div>
+            </div>
+
+            <div class="result-panel">
+              <div class="result-header">Metric Triad Breakdown</div>
+              <div class="score-display-row">
+                <div class="score-badge-large">
+                  <span class="score-number" id="prfF1">84.21%</span>
+                  <span class="score-label">F1-Score (Harmonic Mean)</span>
+                </div>
+                <div class="score-meta-list">
+                  <div class="score-meta-item">
+                    <span class="key">Precision (Quality)</span>
+                    <span class="val" id="prfPrecision">80.00%</span>
+                    <div style="height:4px; background:var(--bg-secondary); border-radius:2px; margin-top:6px;">
+                      <div id="prfPBar" style="height:100%; width:80%; background:#38bdf8;"></div>
+                    </div>
+                  </div>
+                  <div class="score-meta-item">
+                    <span class="key">Recall (Quantity)</span>
+                    <span class="val" id="prfRecall">88.89%</span>
+                    <div style="height:4px; background:var(--bg-secondary); border-radius:2px; margin-top:6px;">
+                      <div id="prfRBar" style="height:100%; width:88.89%; background:#a855f7;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-content" data-content="l3-theory">
+          <div class="formula-box">
+            <div class="formula-title">Formulas</div>
+            <div class="formula-math">
+              $$Precision = \frac{TP}{TP + FP} \qquad Recall = \frac{TP}{TP + FN}$$
+              $$F1\text{-Score} = 2 \times \frac{Precision \times Recall}{Precision + Recall}$$
+            </div>
+          </div>
+          <p>
+            • <strong>Precision:</strong> "Out of all positive predictions, how many were right?" Critical when False Positives are expensive (e.g., spam filter moving important client emails to spam).
+            <br>• <strong>Recall:</strong> "Out of all actual positive cases, how many did the model catch?" Critical when False Negatives are dangerous (e.g., cancer detection or fraud detection).
+            <br>• <strong>F1-Score:</strong> The harmonic mean that penalizes models with extreme trade-offs (e.g. 100% recall with 5% precision).
+          </p>
+        </div>
+
+        <div class="tab-content" data-content="l3-code">
+          <div class="code-wrapper">
+            <div class="code-header">
+              <span>Python 3 Implementation</span>
+              <button class="btn-copy"><i class="fa-regular fa-copy"></i> Copy</button>
+            </div>
+            <pre><code>from sklearn.metrics import precision_score, recall_score, f1_score, classification_report
+
+y_true = [1, 0, 1, 1, 0, 1, 0, 0, 1, 0]
+y_pred = [1, 0, 1, 0, 0, 1, 0, 1, 1, 0]
+
+p = precision_score(y_true, y_pred)
+r = recall_score(y_true, y_pred)
+f1 = f1_score(y_true, y_pred)
+
+print(f"Precision: {p:.4f}")
+print(f"Recall:    {r:.4f}")
+print(f"F1-Score:  {f1:.4f}")
+print("\nFull Report:\n", classification_report(y_true, y_pred))</code></pre>
+          </div>
+        </div>
+
+        <div class="tab-content" data-content="l3-pros">
+          <div class="pros-cons-grid">
+            <div class="pro-box">
+              <h5><i class="fa-solid fa-circle-check"></i> Advantages</h5>
+              <ul>
+                <li>Deep diagnostic breakdown for unbalanced real-world datasets.</li>
+                <li>Allows tuning probability thresholds according to business costs.</li>
+                <li>F1 creates a unified optimization target balancing precision and recall.</li>
+              </ul>
+            </div>
+            <div class="con-box">
+              <h5><i class="fa-solid fa-circle-xmark"></i> Limitations</h5>
+              <ul>
+                <li>Single macro/micro F1 can obscure minority class behavior.</li>
+                <li>Does not penalize True Negatives; completely ignores TN in calculation.</li>
+                <li>Requires accurate binary or multi-class ground truth labels.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== LESSON 4: BLEU SCORE ==================== -->
+      <section class="lesson-card" id="lesson-4">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="lesson-badge">04</div>
+            <div>
+              <h2 class="section-title">BLEU Score (Bilingual Evaluation Understudy)</h2>
+              <p style="color:var(--text-secondary); font-size:0.9rem;">Modified n-gram precision and brevity penalty for machine translation.</p>
+            </div>
+          </div>
+          <div class="section-tags">
+            <span class="badge badge-purple">N-Gram Precision</span>
+            <span class="badge badge-green">Higher is Better</span>
+            <span class="badge badge-blue">Translation Benchmark</span>
+          </div>
+        </div>
+
+        <div class="tabs-header">
+          <button class="tab-btn active" data-tab="l4-play"><i class="fa-solid fa-flask"></i> Interactive Playground</button>
+          <button class="tab-btn" data-tab="l4-theory"><i class="fa-solid fa-book-open"></i> Theory & Formulas</button>
+          <button class="tab-btn" data-tab="l4-code"><i class="fa-brands fa-python"></i> Python Code</button>
+          <button class="tab-btn" data-tab="l4-pros"><i class="fa-solid fa-scale-balanced"></i> Pros & Cons</button>
+        </div>
+
+        <div class="tab-content active" data-content="l4-play">
+          <div class="playground-widget">
+            <div class="playground-header">
+              <span class="playground-title"><i class="fa-solid fa-calculator"></i> Customizable N-Gram BLEU Calculator</span>
+              <button class="btn-calc" id="bleuCalcBtn"><i class="fa-solid fa-play"></i> Compute BLEU</button>
+            </div>
+
+            <!-- User-Selectable N-Gram Control Bar -->
+            <div class="ngram-control-bar">
+              <div class="ngram-bar-header">
+                <span class="ngram-bar-title"><i class="fa-solid fa-sliders"></i> Select Your N-Gram Order & Weights:</span>
+                <div class="ngram-preset-group">
+                  <button type="button" class="ngram-preset-btn" data-ngram="1">1-gram (BLEU-1)</button>
+                  <button type="button" class="ngram-preset-btn" data-ngram="2">2-gram (BLEU-2)</button>
+                  <button type="button" class="ngram-preset-btn" data-ngram="3">3-gram (BLEU-3)</button>
+                  <button type="button" class="ngram-preset-btn active" data-ngram="4">4-gram (BLEU-4)</button>
+                  <button type="button" class="ngram-preset-btn" data-ngram="custom">Custom Grams</button>
+                </div>
+              </div>
+
+              <div class="ngram-selection-row">
+                <label class="ngram-check-item">
+                  <input type="checkbox" id="bleuCheck1" checked> 1-gram
+                  <span class="ngram-weight-box">w₁: <input type="number" id="bleuWeight1" value="0.25" step="0.05" min="0" max="1"></span>
+                </label>
+                <label class="ngram-check-item">
+                  <input type="checkbox" id="bleuCheck2" checked> 2-gram
+                  <span class="ngram-weight-box">w₂: <input type="number" id="bleuWeight2" value="0.25" step="0.05" min="0" max="1"></span>
+                </label>
+                <label class="ngram-check-item">
+                  <input type="checkbox" id="bleuCheck3" checked> 3-gram
+                  <span class="ngram-weight-box">w₃: <input type="number" id="bleuWeight3" value="0.25" step="0.05" min="0" max="1"></span>
+                </label>
+                <label class="ngram-check-item">
+                  <input type="checkbox" id="bleuCheck4" checked> 4-gram
+                  <span class="ngram-weight-box">w₄: <input type="number" id="bleuWeight4" value="0.25" step="0.05" min="0" max="1"></span>
+                </label>
+                <label class="ngram-check-item">
+                  <input type="checkbox" id="bleuCheck5"> 5-gram
+                  <span class="ngram-weight-box">w₅: <input type="number" id="bleuWeight5" value="0.00" step="0.05" min="0" max="1"></span>
+                </label>
+                <button type="button" id="btnAutoBalanceWeights" class="ngram-preset-btn" style="margin-left:auto;">
+                  <i class="fa-solid fa-scale-balanced"></i> Auto-Balance Weights
+                </button>
+              </div>
+            </div>
+
+            <div class="input-grid">
+              <div class="input-group">
+                <label>Reference Translation</label>
+                <textarea id="bleuRef" rows="2">the quick brown fox jumped over the lazy dog</textarea>
+              </div>
+              <div class="input-group">
+                <label>Candidate Model Translation</label>
+                <textarea id="bleuCand" rows="2">the fast brown fox jumped over the lazy dog</textarea>
+              </div>
+            </div>
+
+            <div class="result-panel">
+              <div class="result-header">BLEU Breakdown</div>
+              <div class="score-display-row">
+                <div class="score-badge-large">
+                  <span class="score-number" id="bleuScore">72.48</span>
+                  <span class="score-label" id="bleuScoreLabel">BLEU-4 Score (0-100)</span>
+                  <div id="bleuFormulaBadge" style="font-size:0.72rem; color:var(--text-muted); margin-top:4px; font-family:var(--font-mono);">Weights: (0.25, 0.25, 0.25, 0.25)</div>
+                </div>
+                <div class="score-meta-list">
+                  <div class="score-meta-item">
+                    <span class="key">Brevity Penalty (BP)</span>
+                    <span class="val" id="bleuBP">1.0000</span>
+                  </div>
+                  <div class="score-meta-item" id="bleuP1Box">
+                    <span class="key">1-gram Precision (p1)</span>
+                    <span class="val" id="bleuP1">88.9%</span>
+                  </div>
+                  <div class="score-meta-item" id="bleuP2Box">
+                    <span class="key">2-gram Precision (p2)</span>
+                    <span class="val" id="bleuP2">75.0%</span>
+                  </div>
+                  <div class="score-meta-item" id="bleuP3Box">
+                    <span class="key">3-gram Precision (p3)</span>
+                    <span class="val" id="bleuP3">71.4%</span>
+                  </div>
+                  <div class="score-meta-item" id="bleuP4Box">
+                    <span class="key">4-gram Precision (p4)</span>
+                    <span class="val" id="bleuP4">66.7%</span>
+                  </div>
+                  <div class="score-meta-item" id="bleuP5Box" style="display:none;">
+                    <span class="key">5-gram Precision (p5)</span>
+                    <span class="val" id="bleuP5">0.0%</span>
+                  </div>
+                </div>
+              </div>
+              <div class="intermediate-steps" id="bleuMatches"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-content" data-content="l4-theory">
+          <p>
+            BLEU evaluates how much the candidate text overlaps with one or more reference texts using modified n-gram precision and penalizes overly short candidate sentences via a brevity penalty.
+          </p>
+          <div class="formula-box">
+            <div class="formula-title">Brevity Penalty (BP) & BLEU Formulas</div>
+            <div class="formula-math">
+              $$BP = \begin{cases} 1 & \text{if } c \geq r \\ e^{(1 - r/c)} & \text{if } c < r \end{cases}$$
+              $$BLEU = BP \times \exp\left(\sum_{n=1}^{N} w_n \ln p_n\right)$$
+            </div>
+          </div>
+          <p>
+            Where:
+            <br>• \(c\) = Length of candidate text tokens.
+            <br>• \(r\) = Effective reference text length.
+            <br>• \(p_n\) = Modified n-gram precision clipped to reference maximum count.
+            <br>• \(w_n\) = Uniform weights \((1/N)\), typically with \(N=4\).
+          </p>
+        </div>
+
+        <div class="tab-content" data-content="l4-code">
+          <div class="code-wrapper">
+            <div class="code-header">
+              <span>Python 3 with NLTK</span>
+              <button class="btn-copy"><i class="fa-regular fa-copy"></i> Copy</button>
+            </div>
+            <pre><code>from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
+
+reference = ["the quick brown fox jumped over the lazy dog".split()]
+candidate = "the fast brown fox jumped over the lazy dog".split()
+
+smoothie = SmoothingFunction().method1
+score = sentence_bleu(reference, candidate, weights=(0.25, 0.25, 0.25, 0.25), smoothing_function=smoothie)
+
+print(f"BLEU-4 Score: {score * 100:.2f}")</code></pre>
+          </div>
+        </div>
+
+        <div class="tab-content" data-content="l4-pros">
+          <div class="pros-cons-grid">
+            <div class="pro-box">
+              <h5><i class="fa-solid fa-circle-check"></i> Advantages</h5>
+              <ul>
+                <li>Standard baseline across academia and industry for translation evaluation.</li>
+                <li>Fast, inexpensive, and fully deterministic.</li>
+                <li>Accounts for word order via higher order n-grams (bigrams, trigrams, 4-grams).</li>
+              </ul>
+            </div>
+            <div class="con-box">
+              <h5><i class="fa-solid fa-circle-xmark"></i> Limitations</h5>
+              <ul>
+                <li>Heavily penalizes legitimate synonyms and paraphrases (e.g. "fast" vs "quick").</li>
+                <li>Unreliable for individual short sentences without smoothing.</li>
+                <li>Does not evaluate factual truth or grammatical fluency.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== LESSON 5: ROUGE SCORE ==================== -->
+      <section class="lesson-card" id="lesson-5">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="lesson-badge">05</div>
+            <div>
+              <h2 class="section-title">ROUGE Score (Recall-Oriented Understudy for Gisting Evaluation)</h2>
+              <p style="color:var(--text-secondary); font-size:0.9rem;">Information coverage and longest common subsequence for text summarization.</p>
+            </div>
+          </div>
+          <div class="section-tags">
+            <span class="badge badge-purple">Recall-Oriented</span>
+            <span class="badge badge-green">Higher is Better</span>
+            <span class="badge badge-blue">Summarization Standard</span>
+          </div>
+        </div>
+
+        <div class="tabs-header">
+          <button class="tab-btn active" data-tab="l5-play"><i class="fa-solid fa-flask"></i> Interactive Playground</button>
+          <button class="tab-btn" data-tab="l5-theory"><i class="fa-solid fa-book-open"></i> Theory & Formulas</button>
+          <button class="tab-btn" data-tab="l5-code"><i class="fa-brands fa-python"></i> Python Code</button>
+          <button class="tab-btn" data-tab="l5-pros"><i class="fa-solid fa-scale-balanced"></i> Pros & Cons</button>
+        </div>
+
+        <div class="tab-content active" data-content="l5-play">
+          <div class="playground-widget">
+            <div class="playground-header">
+              <span class="playground-title"><i class="fa-solid fa-compress"></i> Live ROUGE-1, ROUGE-2 & ROUGE-L Evaluator</span>
+              <button class="btn-calc" id="rougeCalcBtn"><i class="fa-solid fa-play"></i> Compute ROUGE</button>
+            </div>
+
+            <div class="input-grid">
+              <div class="input-group">
+                <label>Reference Summary</label>
+                <textarea id="rougeRef" rows="3">Machine learning algorithms learn statistical representations from training data to make predictions on unseen data.</textarea>
+              </div>
+              <div class="input-group">
+                <label>Generated Summary (LLM)</label>
+                <textarea id="rougeCand" rows="3">Machine learning algorithms learn representations from data to make predictions.</textarea>
+              </div>
+            </div>
+
+            <div class="result-panel">
+              <div class="result-header">ROUGE F1-Scores</div>
+              <div class="score-display-row">
+                <div class="score-badge-large">
+                  <span class="score-number" id="rouge1Score">80.00</span>
+                  <span class="score-label">ROUGE-1 F1 (%)</span>
+                </div>
+                <div class="score-badge-large">
+                  <span class="score-number" id="rouge2Score">72.73</span>
+                  <span class="score-label">ROUGE-2 F1 (%)</span>
+                </div>
+                <div class="score-badge-large">
+                  <span class="score-number" id="rougeLScore">80.00</span>
+                  <span class="score-label">ROUGE-L F1 (%)</span>
+                </div>
+              </div>
+              <div id="rougeDetails"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-content" data-content="l5-theory">
+          <p>
+            Unlike BLEU which prioritizes precision, <strong>ROUGE</strong> is primarily recall-oriented: it checks how much essential information from the reference summary was retained by the candidate.
+          </p>
+          <div class="formula-box">
+            <div class="formula-title">Main ROUGE Variants</div>
+            <div class="formula-math">
+              $$ROUGE\text{-}N = \frac{\sum_{S \in Ref} \sum_{gram_n \in S} Count_{match}(gram_n)}{\sum_{S \in Ref} \sum_{gram_n \in S} Count(gram_n)}$$
+            </div>
+          </div>
+          <ul style="margin: 10px 0 10px 20px;">
+            <li><strong>ROUGE-1:</strong> Unigram overlap (vocabulary coverage).</li>
+            <li><strong>ROUGE-2:</strong> Bigram overlap (local phrase fluency).</li>
+            <li><strong>ROUGE-L:</strong> Longest Common Subsequence (sentence structure and word order flexibility).</li>
+            <li><strong>ROUGE-Lsum:</strong> Summary-level LCS combining sentence unions.</li>
+            <li><strong>ROUGE-S / SU:</strong> Skip-bigram overlap with arbitrary word gaps.</li>
+          </ul>
+        </div>
+
+        <div class="tab-content" data-content="l5-code">
+          <div class="code-wrapper">
+            <div class="code-header">
+              <span>Python 3 using rouge-score</span>
+              <button class="btn-copy"><i class="fa-regular fa-copy"></i> Copy</button>
+            </div>
+            <pre><code>from rouge_score import rouge_scorer
+
+scorer = rouge_scorer.RougeScorer(['rouge1', 'rouge2', 'rougeL'], use_stemmer=True)
+ref = "Machine learning algorithms learn statistical representations from training data."
+cand = "Machine learning algorithms learn representations from data."
+
+scores = scorer.score(ref, cand)
+for key, val in scores.items():
+    print(f"{key.upper()} -> Precision: {val.precision:.4f}, Recall: {val.recall:.4f}, F1: {val.fmeasure:.4f}")</code></pre>
+          </div>
+        </div>
+
+        <div class="tab-content" data-content="l5-pros">
+          <div class="pros-cons-grid">
+            <div class="pro-box">
+              <h5><i class="fa-solid fa-circle-check"></i> Advantages</h5>
+              <ul>
+                <li>The definitive metric for evaluating text summarization benchmarks.</li>
+                <li>Prioritizes information retention (recall) over pure brevity.</li>
+                <li>ROUGE-L captures sentence-level structure without requiring strict consecutive matches.</li>
+              </ul>
+            </div>
+            <div class="con-box">
+              <h5><i class="fa-solid fa-circle-xmark"></i> Limitations</h5>
+              <ul>
+                <li>Lacks deep semantic understanding of conceptual equivalence.</li>
+                <li>A model hallucination that repeats reference keywords can score deceptively high.</li>
+                <li>Highly sensitive to sentence tokenization and lemmatization parameters.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== LESSON 6: METEOR SCORE ==================== -->
+      <section class="lesson-card" id="lesson-6">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="lesson-badge">06</div>
+            <div>
+              <h2 class="section-title">METEOR Score</h2>
+              <p style="color:var(--text-secondary); font-size:0.9rem;">Metric for Evaluation of Translation with Explicit ORdering, stemming, and synonyms.</p>
+            </div>
+          </div>
+          <div class="section-tags">
+            <span class="badge badge-purple">Stemming & Synonyms</span>
+            <span class="badge badge-green">Higher is Better</span>
+            <span class="badge badge-rose">Fragmentation Penalty</span>
+          </div>
+        </div>
+
+        <div class="tabs-header">
+          <button class="tab-btn active" data-tab="l6-play"><i class="fa-solid fa-flask"></i> Interactive Playground</button>
+          <button class="tab-btn" data-tab="l6-theory"><i class="fa-solid fa-book-open"></i> Theory & Formulas</button>
+          <button class="tab-btn" data-tab="l6-code"><i class="fa-brands fa-python"></i> Python Code</button>
+          <button class="tab-btn" data-tab="l6-pros"><i class="fa-solid fa-scale-balanced"></i> Pros & Cons</button>
+        </div>
+
+        <div class="tab-content active" data-content="l6-play">
+          <div class="playground-widget">
+            <div class="playground-header">
+              <span class="playground-title"><i class="fa-solid fa-meteor"></i> Live METEOR Alignment & Penalty Calculator</span>
+              <button class="btn-calc" id="meteorCalcBtn"><i class="fa-solid fa-play"></i> Calculate METEOR</button>
+            </div>
+
+            <div class="input-grid">
+              <div class="input-group">
+                <label>Reference Text</label>
+                <textarea id="meteorRef" rows="2">the president gave a speech to the citizens yesterday</textarea>
+              </div>
+              <div class="input-group">
+                <label>Candidate Text</label>
+                <textarea id="meteorCand" rows="2">yesterday the president gave an address to the citizens</textarea>
+              </div>
+            </div>
+
+            <div class="result-panel">
+              <div class="result-header">METEOR Components</div>
+              <div class="score-display-row">
+                <div class="score-badge-large">
+                  <span class="score-number" id="meteorScore">84.15</span>
+                  <span class="score-label">Final METEOR (0-100)</span>
+                </div>
+                <div class="score-meta-list">
+                  <div class="score-meta-item">
+                    <span class="key">Precision (P)</span>
+                    <span class="val" id="meteorP">88.9%</span>
+                  </div>
+                  <div class="score-meta-item">
+                    <span class="key">Recall (R)</span>
+                    <span class="val" id="meteorR">88.9%</span>
+                  </div>
+                  <div class="score-meta-item">
+                    <span class="key">F_mean (Weighted 9:1 R:P)</span>
+                    <span class="val" id="meteorFmean">88.89</span>
+                  </div>
+                  <div class="score-meta-item">
+                    <span class="key">Fragmentation Penalty</span>
+                    <span class="val" id="meteorPenalty">5.34%</span>
+                  </div>
+                  <div class="score-meta-item">
+                    <span class="key">Contiguous Chunks</span>
+                    <span class="val" id="meteorChunks">2</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-content" data-content="l6-theory">
+          <p>
+            METEOR addresses BLEU's shortcomings by aligning words via exact match, morphological stems, and WordNet synonyms. It weights recall 9x more heavily than precision and applies a fragmentation penalty when word orders are shuffled.
+          </p>
+          <div class="formula-box">
+            <div class="formula-title">Formulas</div>
+            <div class="formula-math">
+              $$F_{mean} = \frac{10 \times P \times R}{R + 9P} \qquad Penalty = 0.5 \times \left(\frac{chunks}{m}\right)^3$$
+              $$METEOR = F_{mean} \times (1 - Penalty)$$
+            </div>
+          </div>
+          <p>
+            Where \(m\) is the count of mapped word matches, and \(chunks\) is the count of contiguous matching segments.
+          </p>
+        </div>
+
+        <div class="tab-content" data-content="l6-code">
+          <div class="code-wrapper">
+            <div class="code-header">
+              <span>Python 3 with NLTK</span>
+              <button class="btn-copy"><i class="fa-regular fa-copy"></i> Copy</button>
+            </div>
+            <pre><code>import nltk
+from nltk.translate.meteor_score import meteor_score
+# nltk.download('wordnet')
+
+ref = ["the president gave a speech to the citizens yesterday".split()]
+cand = "yesterday the president gave a speech to the citizens".split()
+
+score = meteor_score(ref, cand)
+print(f"METEOR Score: {score:.4f}")</code></pre>
+          </div>
+        </div>
+
+        <div class="tab-content" data-content="l6-pros">
+          <div class="pros-cons-grid">
+            <div class="pro-box">
+              <h5><i class="fa-solid fa-circle-check"></i> Advantages</h5>
+              <ul>
+                <li>Stronger correlation with human judgment than raw BLEU on sentence level.</li>
+                <li>Supports stemming and synonym matching for natural vocabulary variance.</li>
+                <li>Penalizes unnatural scrambled word order via fragmentation exponent.</li>
+              </ul>
+            </div>
+            <div class="con-box">
+              <h5><i class="fa-solid fa-circle-xmark"></i> Limitations</h5>
+              <ul>
+                <li>Requires language-specific lexical resources (WordNet dictionaries).</li>
+                <li>More computationally complex to calculate than simple n-gram overlap.</li>
+                <li>Does not guarantee factual correctness.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== LESSON 7: BERTSCORE ==================== -->
+      <section class="lesson-card" id="lesson-7">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="lesson-badge">07</div>
+            <div>
+              <h2 class="section-title">BERTScore</h2>
+              <p style="color:var(--text-secondary); font-size:0.9rem;">Semantic similarity using contextual token embeddings and greedy cosine alignment.</p>
+            </div>
+          </div>
+          <div class="section-tags">
+            <span class="badge badge-purple">Deep Semantic</span>
+            <span class="badge badge-green">Higher is Better</span>
+            <span class="badge badge-blue">Contextual LLM Metric</span>
+          </div>
+        </div>
+
+        <div class="tabs-header">
+          <button class="tab-btn active" data-tab="l7-play"><i class="fa-solid fa-flask"></i> Interactive Playground</button>
+          <button class="tab-btn" data-tab="l7-theory"><i class="fa-solid fa-book-open"></i> Theory & Formulas</button>
+          <button class="tab-btn" data-tab="l7-code"><i class="fa-brands fa-python"></i> Python Code</button>
+          <button class="tab-btn" data-tab="l7-pros"><i class="fa-solid fa-scale-balanced"></i> Pros & Cons</button>
+        </div>
+
+        <div class="tab-content active" data-content="l7-play">
+          <div class="playground-widget">
+            <div class="playground-header">
+              <span class="playground-title"><i class="fa-solid fa-brain"></i> Interactive Semantic Cosine Similarity Matrix</span>
+              <button class="btn-calc" id="bertCalcBtn"><i class="fa-solid fa-play"></i> Compute BERTScore</button>
+            </div>
+
+            <div class="input-grid">
+              <div class="input-group">
+                <label>Reference Sentence</label>
+                <input type="text" id="bertRef" value="A lovely puppy playing in park">
+              </div>
+              <div class="input-group">
+                <label>Candidate Sentence (Paraphrase)</label>
+                <input type="text" id="bertCand" value="An adorable dog running in garden">
+              </div>
+            </div>
+
+            <div class="result-panel">
+              <div class="result-header">Semantic Scores</div>
+              <div class="score-display-row">
+                <div class="score-badge-large">
+                  <span class="score-number" id="bertF1">89.42%</span>
+                  <span class="score-label">BERTScore F1</span>
+                </div>
+                <div class="score-meta-list">
+                  <div class="score-meta-item">
+                    <span class="key">Precision (P_BERT)</span>
+                    <span class="val" id="bertP">89.1%</span>
+                  </div>
+                  <div class="score-meta-item">
+                    <span class="key">Recall (R_BERT)</span>
+                    <span class="val" id="bertR">89.8%</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Cosine Heatmap Matrix -->
+              <div style="margin-top:16px;">
+                <div style="font-size:0.75rem; text-transform:uppercase; color:var(--text-muted); font-weight:700;">
+                  Token-to-Token Cosine Similarity Heatmap (Greedy Matching Target)
+                </div>
+                <div id="bertMatrix" style="overflow-x:auto;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-content" data-content="l7-theory">
+          <p>
+            BERTScore leverages contextual embeddings from pretrained language models (such as RoBERTa or DeBERTa) to calculate cosine similarity between all token pairs in candidate and reference sentences.
+          </p>
+          <div class="formula-box">
+            <div class="formula-title">Cosine Similarity & Greedy Match Formulas</div>
+            <div class="formula-math">
+              $$S_{ij} = \frac{\mathbf{x}_i^T \mathbf{y}_j}{\|\mathbf{x}_i\| \|\mathbf{y}_j\|}$$
+              $$P_{BERT} = \frac{1}{|C|} \sum_{x_i \in C} \max_{y_j \in R} S_{ij} \qquad R_{BERT} = \frac{1}{|R|} \sum_{y_j \in R} \max_{x_i \in C} S_{ij}$$
+              $$F1_{BERT} = 2 \times \frac{P_{BERT} \times R_{BERT}}{P_{BERT} + R_{BERT}}$$
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-content" data-content="l7-code">
+          <div class="code-wrapper">
+            <div class="code-header">
+              <span>Python 3 using bert_score package</span>
+              <button class="btn-copy"><i class="fa-regular fa-copy"></i> Copy</button>
+            </div>
+            <pre><code>from bert_score import score
+
+cands = ["An adorable dog running in garden"]
+refs = ["A lovely puppy playing in park"]
+
+P, R, F1 = score(cands, refs, lang="en", verbose=False)
+print(f"BERTScore -> Precision: {P.mean():.4f}, Recall: {R.mean():.4f}, F1: {F1.mean():.4f}")</code></pre>
+          </div>
+        </div>
+
+        <div class="tab-content" data-content="l7-pros">
+          <div class="pros-cons-grid">
+            <div class="pro-box">
+              <h5><i class="fa-solid fa-circle-check"></i> Advantages</h5>
+              <ul>
+                <li>Detects semantic meaning rather than relying on brittle keyword overlap.</li>
+                <li>Recognizes paraphrases, synonyms, and context-dependent meanings.</li>
+                <li>Far higher correlation with human judgment across diverse NLP tasks.</li>
+              </ul>
+            </div>
+            <div class="con-box">
+              <h5><i class="fa-solid fa-circle-xmark"></i> Limitations</h5>
+              <ul>
+                <li>Requires GPU / deep neural network inference (computationally expensive).</li>
+                <li>Can assign high scores to negation flips (e.g. "I love cats" vs "I do not love cats").</li>
+                <li>High semantic similarity does not prove factual precision.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== LESSON 8: WORD ERROR RATE ==================== -->
+      <section class="lesson-card" id="lesson-8">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="lesson-badge">08</div>
+            <div>
+              <h2 class="section-title">Word Error Rate (WER)</h2>
+              <p style="color:var(--text-secondary); font-size:0.9rem;">Levenshtein minimum edit distance at word level for Speech Recognition (ASR).</p>
+            </div>
+          </div>
+          <div class="section-tags">
+            <span class="badge badge-amber">Error Metric</span>
+            <span class="badge badge-rose">Lower is Better (0 = Perfect)</span>
+            <span class="badge badge-blue">Speech Recognition</span>
+          </div>
+        </div>
+
+        <div class="tabs-header">
+          <button class="tab-btn active" data-tab="l8-play"><i class="fa-solid fa-flask"></i> Interactive Playground</button>
+          <button class="tab-btn" data-tab="l8-theory"><i class="fa-solid fa-book-open"></i> Theory & Formulas</button>
+          <button class="tab-btn" data-tab="l8-code"><i class="fa-brands fa-python"></i> Python Code</button>
+          <button class="tab-btn" data-tab="l8-pros"><i class="fa-solid fa-scale-balanced"></i> Pros & Cons</button>
+        </div>
+
+        <div class="tab-content active" data-content="l8-play">
+          <div class="playground-widget">
+            <div class="playground-header">
+              <span class="playground-title"><i class="fa-solid fa-microphone"></i> Live WER Alignment & Edit Distance</span>
+              <button class="btn-calc" id="werCalcBtn"><i class="fa-solid fa-play"></i> Compute WER</button>
+            </div>
+
+            <div class="input-grid">
+              <div class="input-group">
+                <label>Reference Audio Transcription</label>
+                <input type="text" id="werRef" value="I like artificial intelligence models">
+              </div>
+              <div class="input-group">
+                <label>Candidate Hypothesis (ASR Output)</label>
+                <input type="text" id="werCand" value="I really love artificial models">
+              </div>
+            </div>
+
+            <div class="result-panel">
+              <div class="result-header">Word Error Breakdown</div>
+              <div class="score-display-row">
+                <div class="score-badge-large">
+                  <span class="score-number" id="werScore" style="color:var(--warning);">60.00%</span>
+                  <span class="score-label">Word Error Rate</span>
+                </div>
+                <div class="score-meta-list">
+                  <div class="score-meta-item">
+                    <span class="key">Substitutions (S)</span>
+                    <span class="val" id="werS" style="color:#fbbf24;">1</span>
+                  </div>
+                  <div class="score-meta-item">
+                    <span class="key">Deletions (D)</span>
+                    <span class="val" id="werD" style="color:#f87171;">1</span>
+                  </div>
+                  <div class="score-meta-item">
+                    <span class="key">Insertions (I)</span>
+                    <span class="val" id="werI" style="color:#38bdf8;">1</span>
+                  </div>
+                  <div class="score-meta-item">
+                    <span class="key">Reference Words (N)</span>
+                    <span class="val" id="werN">5</span>
+                  </div>
+                </div>
+              </div>
+              <div style="margin-top:16px;">
+                <div style="font-size:0.75rem; text-transform:uppercase; color:var(--text-muted); font-weight:700; margin-bottom:6px;">
+                  Aligned Token Operations (Match / Sub / Del / Ins)
+                </div>
+                <div id="werAlignment"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-content" data-content="l8-theory">
+          <p>
+            <strong>Word Error Rate (WER)</strong> is the standard metric in speech-to-text systems. It calculates the minimum edit distance required to convert the hypothesis text into the reference text.
+          </p>
+          <div class="formula-box">
+            <div class="formula-title">WER Formula</div>
+            <div class="formula-math">
+              $$WER = \frac{S + D + I}{N}$$
+            </div>
+          </div>
+          <p>
+            Where:
+            <br>• <strong>S (Substitution):</strong> Word replaced with an incorrect word ("like" → "love").
+            <br>• <strong>D (Deletion):</strong> Reference word missing from candidate.
+            <br>• <strong>I (Insertion):</strong> Extra word hallucinated into candidate ("really").
+            <br>• <strong>N:</strong> Total word count in reference.
+            <br><em style="color:var(--warning);">Note:</em> WER can exceed 100% when there are more insertions than original reference words.
+          </p>
+        </div>
+
+        <div class="tab-content" data-content="l8-code">
+          <div class="code-wrapper">
+            <div class="code-header">
+              <span>Python 3 using jiwer</span>
+              <button class="btn-copy"><i class="fa-regular fa-copy"></i> Copy</button>
+            </div>
+            <pre><code>import jiwer
+
+reference = "I like artificial intelligence models"
+hypothesis = "I really love artificial models"
+
+wer = jiwer.wer(reference, hypothesis)
+details = jiwer.process_words(reference, hypothesis)
+
+print(f"WER: {wer:.2%}")
+print(f"S: {details.substitutions}, D: {details.deletions}, I: {details.insertions}, N: {len(reference.split())}")</code></pre>
+          </div>
+        </div>
+
+        <div class="tab-content" data-content="l8-pros">
+          <div class="pros-cons-grid">
+            <div class="pro-box">
+              <h5><i class="fa-solid fa-circle-check"></i> Advantages</h5>
+              <ul>
+                <li>The undisputed gold standard for automatic speech recognition (ASR) benchmarking.</li>
+                <li>Provides clear diagnostics of failure modes (mumbled words vs skipped words).</li>
+                <li>Directly maps to the edit cost of correcting automated transcripts.</li>
+              </ul>
+            </div>
+            <div class="con-box">
+              <h5><i class="fa-solid fa-circle-xmark"></i> Limitations</h5>
+              <ul>
+                <li>Penalizes semantically harmless differences ("AI" vs "artificial intelligence").</li>
+                <li>Extremely sensitive to number formatting ("4" vs "four") and casing.</li>
+                <li>Can theoretically exceed 1.0 (100%) due to massive insertion spam.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== LESSON 9: CHARACTER ERROR RATE ==================== -->
+      <section class="lesson-card" id="lesson-9">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="lesson-badge">09</div>
+            <div>
+              <h2 class="section-title">Character Error Rate (CER)</h2>
+              <p style="color:var(--text-secondary); font-size:0.9rem;">Fine-grained character-level edit distance for OCR and unsegmented languages.</p>
+            </div>
+          </div>
+          <div class="section-tags">
+            <span class="badge badge-amber">Error Metric</span>
+            <span class="badge badge-rose">Lower is Better</span>
+            <span class="badge badge-blue">OCR & Handwriting</span>
+          </div>
+        </div>
+
+        <div class="tabs-header">
+          <button class="tab-btn active" data-tab="l9-play"><i class="fa-solid fa-flask"></i> Interactive Playground</button>
+          <button class="tab-btn" data-tab="l9-theory"><i class="fa-solid fa-book-open"></i> Theory & Formulas</button>
+          <button class="tab-btn" data-tab="l9-code"><i class="fa-brands fa-python"></i> Python Code</button>
+          <button class="tab-btn" data-tab="l9-pros"><i class="fa-solid fa-scale-balanced"></i> Pros & Cons</button>
+        </div>
+
+        <div class="tab-content active" data-content="l9-play">
+          <div class="playground-widget">
+            <div class="playground-header">
+              <span class="playground-title"><i class="fa-solid fa-font"></i> Live Character Error Rate (CER) Evaluator</span>
+              <button class="btn-calc" id="cerCalcBtn"><i class="fa-solid fa-play"></i> Compute CER</button>
+            </div>
+
+            <div class="input-grid">
+              <div class="input-group">
+                <label>Reference String (e.g. OCR Ground Truth)</label>
+                <input type="text" id="cerRef" value="CATALOGUE #9482">
+              </div>
+              <div class="input-group">
+                <label>Candidate String (OCR Prediction)</label>
+                <input type="text" id="cerCand" value="CATAL0GUE #948Z">
+              </div>
+            </div>
+
+            <div class="result-panel">
+              <div class="result-header">Character Error Breakdown</div>
+              <div class="score-display-row">
+                <div class="score-badge-large">
+                  <span class="score-number" id="cerScore" style="color:var(--warning);">13.33%</span>
+                  <span class="score-label">Character Error Rate</span>
+                </div>
+                <div class="score-meta-list">
+                  <div class="score-meta-item">
+                    <span class="key">Char Substitutions (S)</span>
+                    <span class="val" id="cerS" style="color:#fbbf24;">2</span>
+                  </div>
+                  <div class="score-meta-item">
+                    <span class="key">Char Deletions (D)</span>
+                    <span class="val" id="cerD" style="color:#f87171;">0</span>
+                  </div>
+                  <div class="score-meta-item">
+                    <span class="key">Char Insertions (I)</span>
+                    <span class="val" id="cerI" style="color:#38bdf8;">0</span>
+                  </div>
+                  <div class="score-meta-item">
+                    <span class="key">Total Characters (N)</span>
+                    <span class="val" id="cerN">15</span>
+                  </div>
+                </div>
+              </div>
+              <div style="margin-top:16px;">
+                <div style="font-size:0.75rem; text-transform:uppercase; color:var(--text-muted); font-weight:700; margin-bottom:6px;">
+                  Character Level Alignment
+                </div>
+                <div id="cerAlignment"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-content" data-content="l9-theory">
+          <p>
+            <strong>Character Error Rate (CER)</strong> evaluates errors at the individual character glyph level. It is indispensable for Optical Character Recognition (OCR), license plate readers, and languages without space delimiters (e.g. Chinese, Japanese, Khmer).
+          </p>
+          <div class="formula-box">
+            <div class="formula-title">CER Formula</div>
+            <div class="formula-math">
+              $$CER = \frac{S + D + I}{N}$$
+            </div>
+          </div>
+          <p>
+            Example: If Reference is "CAT" and Candidate is "CUT", there is 1 substitution (A → U) out of 3 characters:
+            $$CER = \frac{1}{3} \approx 33.33\%$$
+          </p>
+        </div>
+
+        <div class="tab-content" data-content="l9-code">
+          <div class="code-wrapper">
+            <div class="code-header">
+              <span>Python 3 using jiwer</span>
+              <button class="btn-copy"><i class="fa-regular fa-copy"></i> Copy</button>
+            </div>
+            <pre><code>import jiwer
+
+ref = "CATALOGUE #9482"
+hyp = "CATAL0GUE #948Z"
+
+cer = jiwer.cer(ref, hyp)
+print(f"Character Error Rate: {cer:.2%}")</code></pre>
+          </div>
+        </div>
+
+        <div class="tab-content" data-content="l9-pros">
+          <div class="pros-cons-grid">
+            <div class="pro-box">
+              <h5><i class="fa-solid fa-circle-check"></i> Advantages</h5>
+              <ul>
+                <li>Detects fine-grained glyph recognition mistakes (e.g., 'O' vs '0', 'l' vs '1').</li>
+                <li>Effective for Asian and non-spaced writing systems.</li>
+                <li>More resilient than WER when single typos invalidate whole words.</li>
+              </ul>
+            </div>
+            <div class="con-box">
+              <h5><i class="fa-solid fa-circle-xmark"></i> Limitations</h5>
+              <ul>
+                <li>Completely ignores word-level semantics.</li>
+                <li>Heavy penalties for whitespace or punctuation formatting inconsistencies.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== LESSON 10: COMPARATIVE EVALUATION ==================== -->
+      <section class="lesson-card" id="lesson-10">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="lesson-badge">10</div>
+            <div>
+              <h2 class="section-title">Comparative Evaluation of LLM Metrics</h2>
+              <p style="color:var(--text-secondary); font-size:0.9rem;">Synthesis matrix, decision framework, and task recommendation wizard.</p>
+            </div>
+          </div>
+          <div class="section-tags">
+            <span class="badge badge-blue">Full Synthesis</span>
+            <span class="badge badge-purple">Decision Framework</span>
+          </div>
+        </div>
+
+        <!-- Task Selection Wizard -->
+        <div class="wizard-box">
+          <h4 style="font-size:1.05rem; font-weight:700; display:flex; align-items:center; gap:8px;">
+            <i class="fa-solid fa-wand-magic-sparkles" style="color:var(--accent-primary);"></i> Which Metric Should You Use? (Interactive Decision Wizard)
+          </h4>
+          <p style="font-size:0.88rem; color:var(--text-secondary); margin-top:4px;">
+            Click on your target LLM / NLP application below to get tailored recommendations:
+          </p>
+
+          <div class="wizard-options">
+            <button class="wizard-btn active" data-task="mcq"><i class="fa-solid fa-list-check"></i> Multiple Choice QA</button>
+            <button class="wizard-btn" data-task="math"><i class="fa-solid fa-calculator"></i> Math Problem Solving</button>
+            <button class="wizard-btn" data-task="classification"><i class="fa-solid fa-tags"></i> Classification / Sentiment</button>
+            <button class="wizard-btn" data-task="translation"><i class="fa-solid fa-language"></i> Machine Translation</button>
+            <button class="wizard-btn" data-task="summarization"><i class="fa-solid fa-file-contract"></i> Text Summarization</button>
+            <button class="wizard-btn" data-task="open_qa"><i class="fa-solid fa-comments"></i> Open-Ended Chat / QA</button>
+            <button class="wizard-btn" data-task="asr"><i class="fa-solid fa-microphone-lines"></i> Speech-to-Text (ASR)</button>
+            <button class="wizard-btn" data-task="ocr"><i class="fa-solid fa-camera"></i> Optical Recognition (OCR)</button>
+          </div>
+
+          <div class="wizard-result" id="wizardResultContent">
+            <h4 style="font-size: 1.15rem; color: var(--accent-primary); margin-bottom: 8px;">
+              <i class="fa-solid fa-bullseye"></i> Multiple-Choice Questions (MCQ)
+            </h4>
+            <p style="margin-bottom: 8px;">
+              <strong>Recommended Primary Metrics:</strong> 
+              <span class="badge badge-blue">Exact Match (EM)</span>
+              <span class="badge badge-blue">Accuracy</span>
+            </p>
+            <p style="margin-bottom: 8px; color: var(--text-secondary); font-size: 0.9rem;">
+              <strong>Why:</strong> Answers are predetermined discrete categories or letters (A, B, C, D). EM and Accuracy directly evaluate whether the chosen label is correct without ambiguity.
+            </p>
+            <p style="color: var(--warning); font-size: 0.85rem;">
+              <strong><i class="fa-solid fa-triangle-exclamation"></i> Watch out:</strong> Ensure prompt extracts only the key letter to avoid false negative non-matches.
+            </p>
+          </div>
+        </div>
+
+        <!-- Master Comparison Table -->
+        <h4 style="font-size:1.1rem; margin-top:32px; font-weight:700;">
+          <i class="fa-solid fa-table"></i> Complete 10-Metric Comparison Matrix
+        </h4>
+
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Category</th>
+                <th>Core Mechanism</th>
+                <th>Primary Use Cases</th>
+                <th>Better Direction</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Exact Match (EM)</strong></td>
+                <td>String Equality</td>
+                <td>Binary string matching with optional normalization</td>
+                <td>QA, Multiple Choice, Math answers</td>
+                <td><span class="badge badge-green">Higher</span></td>
+              </tr>
+              <tr>
+                <td><strong>Accuracy</strong></td>
+                <td>Classification</td>
+                <td>Proportion of correct predictions across all cases</td>
+                <td>Balanced class predictions</td>
+                <td><span class="badge badge-green">Higher</span></td>
+              </tr>
+              <tr>
+                <td><strong>Precision</strong></td>
+                <td>Classification</td>
+                <td>Correct positive predictions over total positive predictions</td>
+                <td>Minimizing False Positives (Spam, Alerts)</td>
+                <td><span class="badge badge-green">Higher</span></td>
+              </tr>
+              <tr>
+                <td><strong>Recall</strong></td>
+                <td>Classification</td>
+                <td>Identified positive cases over actual positive cases</td>
+                <td>Minimizing False Negatives (Medical, Fraud)</td>
+                <td><span class="badge badge-green">Higher</span></td>
+              </tr>
+              <tr>
+                <td><strong>F1-Score</strong></td>
+                <td>Classification</td>
+                <td>Harmonic mean balancing precision and recall</td>
+                <td>Imbalanced classification benchmarks</td>
+                <td><span class="badge badge-green">Higher</span></td>
+              </tr>
+              <tr>
+                <td><strong>BLEU Score</strong></td>
+                <td>N-Gram Overlap</td>
+                <td>Modified clipped n-gram precision + brevity penalty</td>
+                <td>Machine translation systems</td>
+                <td><span class="badge badge-green">Higher</span></td>
+              </tr>
+              <tr>
+                <td><strong>ROUGE Score</strong></td>
+                <td>N-Gram Overlap</td>
+                <td>Recall-oriented n-gram overlap and LCS</td>
+                <td>Text summarization models</td>
+                <td><span class="badge badge-green">Higher</span></td>
+              </tr>
+              <tr>
+                <td><strong>METEOR</strong></td>
+                <td>Alignment & Ordering</td>
+                <td>Word alignment, stemming, synonyms & fragmentation</td>
+                <td>Machine translation, image captioning</td>
+                <td><span class="badge badge-green">Higher</span></td>
+              </tr>
+              <tr>
+                <td><strong>BERTScore</strong></td>
+                <td>Contextual Semantic</td>
+                <td>Deep token cosine similarity via transformer embeddings</td>
+                <td>Open generation, creative summaries, paraphrasing</td>
+                <td><span class="badge badge-green">Higher</span></td>
+              </tr>
+              <tr>
+                <td><strong>Word Error Rate (WER)</strong></td>
+                <td>Edit Distance</td>
+                <td>Word-level substitutions, deletions, insertions</td>
+                <td>Automatic Speech Recognition (ASR)</td>
+                <td><span class="badge badge-rose">Lower (0 = Perfect)</span></td>
+              </tr>
+              <tr>
+                <td><strong>Char Error Rate (CER)</strong></td>
+                <td>Edit Distance</td>
+                <td>Character-level substitutions, deletions, insertions</td>
+                <td>OCR, handwriting, Asian languages</td>
+                <td><span class="badge badge-rose">Lower (0 = Perfect)</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-info" style="margin-top:24px;">
+          <div class="callout-title"><i class="fa-solid fa-lightbulb"></i> Crucial Takeaway for LLM Practitioners</div>
+          No single automated metric tells the entire story. A high ROUGE or BLEU score does not guarantee factuality, logical coherence, or safety.
+          For production LLM applications, automated metrics should always be combined with LLM-as-a-Judge evaluations and targeted human review.
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="app-footer">
+        <div>Advanced Programming for Data Science • <strong>TP04 Suite</strong></div>
+        <div style="color:var(--text-muted); font-size:0.8rem;">
+          Designed to be hosted directly on GitHub Pages (<a href="https://pages.github.com/" target="_blank" style="color:var(--accent-primary); text-decoration:none;">github.io</a>)
+        </div>
+      </footer>
+
+    </main>
+  </div>
+
+  <!-- Custom App Script -->
+  <script src="app.js"></script>
+</body>
+</html>
